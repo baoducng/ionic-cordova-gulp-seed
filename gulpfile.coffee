@@ -102,11 +102,11 @@ PUBLIC_GLOBALS_KEYS = [
 ]
 
 
-paths = 
+paths =
   assets: ['assets/**', '!assets/**/*.ejs']
   assets_ejs: ['assets/**/*.ejs']
   styles: ['app/css/**/*.scss']
-  scripts: 
+  scripts:
     vendor: [
       "assets/components/ionic/release/js/ionic.js"
       "assets/components/angular/angular.js"
@@ -118,20 +118,20 @@ paths =
       # (f.e. bower components)
     ]
     bootstrap: [
-      'app/js/bootstrap.coffee'
+      'app/js/bootstrap.js'
     ]
     app: [
-      'app/js/app_config.coffee' # define application's angular module; add some native/global js variables
-      'app/js/*/**/*.coffee'  # include all angular submodules (like controllers, directives, services)
-      'app/js/routes.coffee'  # app.config - routes
-      'app/js/app_run.coffee' # app.config; app.run
+      'app/js/app_config.js' # define application's angular module; add some native/global js variables
+      'app/js/*/**/*.js'  # include all angular submodules (like controllers, directives, services)
+      'app/js/routes.js'  # app.config - routes
+      'app/js/app_run.js' # app.config; app.run
     ]
     tests: [
       'tests/**/*.coffee'
     ]
   templates: ['app/**/*.jade']
 
-destinations = 
+destinations =
   assets: "#{GLOBALS.BUILD_DIR}"
   styles: "#{GLOBALS.BUILD_DIR}/css"
   scripts: "#{GLOBALS.BUILD_DIR}/js"
@@ -197,11 +197,11 @@ gulp.task 'scripts:vendor', ->
     gulp.src(paths.scripts[scriptsName])
       # .pipe(changed(destinations.scripts))
       # copy .coffee to www/ also, because sourcemap links to sources with relative path
-      # .pipe(gulp.dest(destinations.scripts)) 
-      .pipe(coffee({
+      # .pipe(gulp.dest(destinations.scripts))
+      # .pipe(coffee({
         # sourcemaps arent ready for gulp-concat yet :/ lets wait with that
-        sourceMap: false
-      }))
+        # sourceMap: false
+      # }))
       .on("error", notify.onError((error) -> error.message))
       .pipe(concat("#{scriptsName}.js"))
       .pipe(gulp.dest(destinations.scripts))
@@ -218,7 +218,7 @@ gulp.task 'templates', ->
   gulp.src(paths.templates)
     .pipe(changed(destinations.templates, extension: '.html'))
     .pipe(jade({
-      locals: 
+      locals:
         GLOBALS: template_globals
       pretty: true
     }))
@@ -240,8 +240,8 @@ gulp.task 'test:e2e:server', (cb) ->
   phantomChild.stdout.on 'data', (data) ->
     gutil.log gutil.colors.yellow data.toString()
     if data.toString().match 'running on port '
-      phantomDefer.resolve() 
-    
+      phantomDefer.resolve()
+
   phantomChild.once 'close', ->
     gutil.log "phantomChild closed"
     phantomChild.kill() if phantomChild
@@ -254,7 +254,7 @@ gulp.task 'test:e2e:server', (cb) ->
   phantomDefer.promise
 
 gulp.task 'test:e2e:prepare', (cb) ->
-  child_process.exec "rake test:seed RAILS_ENV=development", 
+  child_process.exec "rake test:seed RAILS_ENV=development",
     cwd: "../rails"
   , (error, stdout, stderr) ->
     cb(error)
@@ -463,4 +463,3 @@ gulp.task "default", (cb) ->
   else
     gulp.task task, ->
       runSequence "#{task}:android", "#{task}:ios"
-
